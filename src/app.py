@@ -3,13 +3,15 @@ import logging
 from RSSifier.converter import create_csv_from_file
 
 from flask import Flask
-from flask import render_template, request, url_for, send_file
+from flask import render_template, request, url_for, send_file, Response
+
+from werkzeug.wsgi import wrap_file
 
 from io import BytesIO, StringIO
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 ALLOWED_TYPES = ('txt', 'doc', 'docx', 'csv', 'xml', 'xlsx', 'xls', 'pdf',
                  'html')
@@ -28,7 +30,7 @@ def upload_file():
     if 'file' not in request.files:
         return 'No file part in the request', 400
     create_csv_from_file(request.files['file'], (data := StringIO()))
-    logger.debug('Converting output to bytes')
-    data = BytesIO(data.getvalue().encode())
+    logger.debug('Converting output to file-wrapped bytes')
+    data = wrap_file(request.environ, BytesIO(data.getvalue().encode()))
     logger.info('Sending file')
-    return send_file(data, download_name='tumblr_rss.csv', mimetype='text/csv', as_attachment=True)
+    return Response(data, 200, mimetype="text/csv", direct_passthrough=True)
