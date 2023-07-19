@@ -31,6 +31,9 @@ def upload_file():
         return 'No file part in the request', 400
     create_csv_from_file(request.files['file'], (data := StringIO()))
     logger.debug('Converting output to file-wrapped bytes')
-    data = wrap_file(request.environ, BytesIO(data.getvalue().encode()))
+    data = data.getvalue().encode()
     logger.info('Sending file')
-    return Response(data, 200, mimetype="text/csv", direct_passthrough=True)
+    r = Response('', 200, mimetype="text/csv", direct_passthrough=True)
+    r.data = data
+    return r
+
