@@ -40,7 +40,6 @@ def create_csv_from_urls(urls, writer):
     logger.info('Writing URLs to file')
     csv_writer = csv.writer(writer)
     for url in urls:
-        logger.debug(f'\tWriting {url}')
         csv_writer.writerow([url])
 
 

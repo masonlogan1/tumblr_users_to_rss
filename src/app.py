@@ -9,9 +9,9 @@ from werkzeug.wsgi import wrap_file
 
 from io import BytesIO, StringIO
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 ALLOWED_TYPES = ('txt', 'doc', 'docx', 'csv', 'xml', 'xlsx', 'xls', 'pdf',
                  'html')
