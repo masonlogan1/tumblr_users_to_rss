@@ -17,7 +17,7 @@ def home():
     return render_template('home.html')
 
 
-@app.route('/tumblrss/upload', methods=['POST'])
+@app.route('/upload', methods=['POST'])
 def upload_file():
     if 'file' not in request.files:
         return 'No file part in the request', 400
