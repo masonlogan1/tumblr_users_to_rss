@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+    {% include "common/common_styles.html" %}
+    {% block page_styles %}{% endblock %}
+</head>
+<body>
+
+{% include "common/header.html" %}
+
+{% include "common/nav.html" %}
+
+<main class="container">
+    {% block content %}{% endblock %}
+</main>
+
+{% include "common/footer.html" %}
+
+<!-- THE REMAINING CONTENT BELOW IS PURELY DECORATIVE -->
+</body>
+</html>
