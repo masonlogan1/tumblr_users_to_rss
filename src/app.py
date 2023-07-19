@@ -22,6 +22,5 @@ def upload_file():
     if 'file' not in request.files:
         return 'No file part in the request', 400
     create_csv_from_file(request.files['file'], (data := StringIO()))
-    print(data.read())
     data = BytesIO(data.getvalue().encode())
     return send_file(data, download_name='tumblr_rss.csv', mimetype='text/csv', as_attachment=True)

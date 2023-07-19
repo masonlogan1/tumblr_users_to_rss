@@ -1,5 +1,10 @@
 import csv
+import logging
 import re
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 DEFAULT_PATTERN = 'https://www.tumblr.com/[A-Za-z--]*'
 NONUSER_TYPES = ('reblog', 'live', 'blog', 'dashboard', 'explore', 'inbox',
@@ -10,10 +15,13 @@ def users_from_file(datafile, url_pattern: str = DEFAULT_PATTERN,
                   ignored_users: str = NONUSER_TYPES):
     """Opens the file, finds all potential user urls, filters out ones we
     know are not actually users, and returns all of them as a list"""
+    logger.info('Parsing file')
     # generates all tumblr urls in the file
     gen_urls = (re.findall(url_pattern, line.decode()) for line in datafile.readlines())
+    logger.debug('Pattern generator ready')
     # unpacks gen_urls into a list of strings; turns into set for uniqueness
-    urls = set(sum([url for url in gen_urls if url is not None], []))
+    urls = set(sum((url for url in gen_urls if url is not None), []))
+    logger.info(f'Found {len(urls)} potential urls')
     # separates the username and filters out things we know are not usernames
     return (user for user in (url.split('/')[-1] for url in urls)
             if user not in ignored_users
@@ -21,6 +29,7 @@ def users_from_file(datafile, url_pattern: str = DEFAULT_PATTERN,
 
 
 def get_rss_urls(users):
+    logger.info('Converting urls to rss format')
     return (f"""https://{user}.tumblr.com/rss""" for user in sorted(users))
 
 
@@ -29,8 +38,10 @@ def parse_rss_urls_from_document(datafile):
 
 
 def create_csv_from_urls(urls, writer):
+    logger.info('Writing URLs to file')
     csv_writer = csv.writer(writer)
     for url in urls:
+        logger.debug(f'\tWriting {url}')
         csv_writer.writerow([url])
 
 
