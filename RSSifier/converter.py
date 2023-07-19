@@ -2,7 +2,6 @@ import csv
 import logging
 import re
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
